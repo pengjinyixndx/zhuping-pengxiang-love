@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星空引导页</title>
+    <style>
+        * { margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        }
+        body, html { 
+            width: 100%;
+            height: 100%; 
+            background: #000; 
+            overflow: hidden; 
+            }
+        .star-container { 
+            position: absolute;
+            width: 100%; 
+            height: 100%;
+            z-index: 1; 
+            }
+        .star {
+             position: absolute; 
+             background: #fff; 
+             border-radius: 50%; 
+             opacity: 0.8; 
+             animation: twinkle 3s infinite alternate; 
+            }
+        @keyframes twinkle { 
+            from { opacity: 0.3; } to { opacity: 1; } 
+        }
+        .page-container { 
+            position: relative;
+            width: 100%; 
+            height: 100%;
+            z-index: 2; 
+            }
+        .page { 
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: none; 
+            }
+        .page.active {
+            display: block; 
+            animation: fadeIn 0.8s;
+            }
+        .page-content {
+            position: absolute; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%); 
+            color: #fff; 
+            font-size: 28px; 
+            text-align: center;
+            width: 80%; 
+            max-width: 600px; 
+            }
+        .end-page {
+            position: absolute;
+            width: 100%; height: 100%; 
+            background: transparent;
+            display: none;
+            z-index: 3;
+             }
+        .end-content { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff; font-size: 28px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+             }
+        .next-btn {
+            position: fixed;
+            bottom: 60px; 
+            right: 70px; 
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+            z-index: 4;
+             }
+        .next-btn:hover { 
+            background: rgba(255,255,255,0.3); 
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="star-container"></div>
+    <div class="page-container">
+        <div class="page active"><div class="page-content">欢迎来到这片专属于我们的星空</div></div>
+        <div class="page"><div class="page-content">爱发生的很突然，也很平静<br>却这么令人着迷</div></div>
+        <div class="page"><div class="page-content">很远很远的，除了视野，还有距离</div></div>
+        <div class="page"><div class="page-content">所有美好都在悄然发生</div></div>
+        <div class="page"><div class="page-content">星星将会绽放它们的光芒</div></div>
+        <div class="end-page">
+            <div class="end-content">
+                星星的故事结束了<br>
+                我们的故事才刚刚开始<br>
+                <a href="#" style="color: #4fc3f7; text-decoration: none; margin-top: 20px; display: inline-block;">进入 萍&祥 主页 →</a>
+            </div>
+        </div>
+    </div>
+    <button class="next-btn">继续 →</button>
+    <script>
+        // 这里粘贴上面逐行拆的JS代码
+        // 1. 页面加载完成后再执行所有代码（避免元素没加载好，JS找不到）
+window.onload = function() {
+    // 2. 获取所有需要操作的元素（用querySelector/querySelectorAll）
+    const starContainer = document.querySelector('.star-container'); // 找星空容器（单个元素）
+    const pages = document.querySelectorAll('.page'); // 找所有页面（多个元素，类数组）
+    const endPage = document.querySelector('.end-page'); // 找结束页（单个元素）
+    const nextBtn = document.querySelector('.next-btn'); // 找继续按钮（单个元素）
+
+    // 3. 定义当前页面索引（会变，用let）
+    let currentIndex = 0;
+
+    // 4. 生成星空的函数（打包生成星星的代码，用function定义）
+    function createStars() {
+        const starCount = 150; // 星星数量（不变，用const）
+        // for循环：重复150次生成星星（for循环语法）
+        for (let i = 0; i < starCount; i++) {
+            // 创建1个星星元素（document.createElement：创建新元素）
+            const star = document.createElement('div');
+            star.classList.add('star'); // 给星星加star类名（classList.add）
+
+            // 获取屏幕宽高（动态适配不同设备）
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // 生成星星随机位置（Math.random()：生成0-1随机数）
+            const left = Math.floor(Math.random() * screenWidth); // Math.floor：向下取整（比如2.8→2）
+            const top = Math.floor(Math.random() * screenHeight);
+            star.style.left = `${left}px`; // 给星星设left位置（px是单位，必须加）
+            star.style.top = `${top}px`; // 给星星设top位置
+
+            // 生成星星随机大小（1-3px）
+            const size = Math.random() * 2 + 1; // 0-2之间随机数+1→1-3
+            star.style.width = `${size}px`; // 星星宽度
+            star.style.height = `${size}px`; // 星星高度（和宽度一致，圆形）
+
+            // 生成星星随机闪烁速度（1-5秒）
+            const animateTime = Math.random() * 4 + 1; // 0-4随机数+1→1-5
+            star.style.animationDuration = `${animateTime}s`; // 设闪烁时长
+
+            // 把星星加到星空容器里（appendChild：添加子元素）
+            starContainer.appendChild(star);
+        }
+    }
+    createStars(); // 调用生成星空函数（必须调用，否则不执行）
+
+    // 5. 页面切换函数（打包切换页面的代码）
+    function switchPage() {
+        // forEach遍历所有页面，逐个删active类（隐藏所有页面）
+        pages.forEach(page => {
+            page.classList.remove('active'); // classList.remove：删类名
+        });
+        // 给当前索引对应的页面加active类（显示当前页）
+        pages[currentIndex].classList.add('active'); // classList.add：加类名
+    }
+    switchPage(); // 初始化：调用切换函数，显示第1个页面（currentIndex初始0）
+
+    // 6. 给继续按钮加点击事件（addEventListener：点击交互）
+    nextBtn.addEventListener('click', function() {
+        currentIndex++; // 当前索引+1（切换到下一页）
+
+        // if-else条件判断：是不是最后一页
+        if (currentIndex < pages.length) {
+            // 没到最后一页，调用切换函数换页
+            switchPage();
+        } else {
+            // 到最后一页，调用显示结束页的函数
+             pages.forEach(page => {
+            page.classList.remove('active'); // classList.remove：删类名
+        });
+            showEndPage();
+        }
+    });
+
+    // 7. 显示结束页的函数
+    function showEndPage() {
+        nextBtn.style.display = 'none'; // 隐藏继续按钮（style控制样式，none=隐藏）
+        endPage.style.display = 'block'; // 显示结束页（block=显示）
+        endPage.style.animation = 'fadeIn 0.8s'; // 给结束页加淡入动画
+    }
+};
+    </script>
+</body>
+</html>
